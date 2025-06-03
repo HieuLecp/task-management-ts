@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 import * as database from "./config/database";
 
-import mainV1Routes from "./api/v1/routes";
+import mainV1Routes from "./api/v1/routes/index.route";
 
 dotenv.config();
 

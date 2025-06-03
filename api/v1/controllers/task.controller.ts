@@ -22,26 +22,26 @@ export const index= async (req: Request, res: Response) => {
     // end lọc theo trạng thái
 
     // search
-        const objectSearch = searchHelper(req.query);
-        // console.log(objectSearch);
+    const objectSearch = searchHelper(req.query);
+    // console.log(objectSearch);
 
-        if(objectSearch.regex){
-            find.title = objectSearch.regex;
-        }
+    if(objectSearch.regex){
+        find.title = objectSearch.regex;
+    }
     // end search 
 
     // pagination
-        const countTask = await Task.countDocuments(find);
-    
-            let objectPagination = paginationHelper(
-                {
-                    currentPage: 1,
-                    limitItems : 3
-                },
-                req.query,
-                countTask
-            )
-        // end pagination
+    const countTask = await Task.countDocuments(find);
+
+        let objectPagination = paginationHelper(
+            {
+                currentPage: 1,
+                limitItems : 3
+            },
+            req.query,
+            countTask
+        )
+    // end pagination
 
     // sort
     const sort= {};
@@ -51,7 +51,9 @@ export const index= async (req: Request, res: Response) => {
     // end sort
 
     const tasks= await Task.find(find)
-    .sort(sort);
+    .sort(sort)
+    .limit(objectPagination.limitItems)
+    .skip(objectPagination.skip);
 
     res.json(tasks);
 }
@@ -71,4 +73,29 @@ export const detail= async (req: Request, res: Response) => {
     }catch(error) {
         res.json("Không tìm thấy");
     }
-}
+};
+
+// [PATCH] api/v1/task/change-status/:id
+export const changeStatus= async (req: Request, res: Response) => {
+    
+    try{
+        const id= req.params.id;
+        const status= req.body.status;
+        
+        await Task.updateOne({
+            _id: id
+        }, {
+            status: status
+        })
+
+        res.json({
+            code: 200,
+            message: "Cập nhập trạng thái thành công!"
+        });
+    }catch(error) {
+        res.json({
+            code: 400,
+            message: "Không tồn tại!"
+        });
+    }
+};
