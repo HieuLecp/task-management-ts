@@ -1,5 +1,6 @@
 import {Request, Response} from "express";
 import Task from "../models/tasks.model";
+import paginationHelper from "../../../helpers/pagination";
 
 export const index= async (req: Request, res: Response) => {
 
@@ -17,6 +18,19 @@ export const index= async (req: Request, res: Response) => {
         find.status= req.query.status.toString();
     }
     // end lọc theo trạng thái
+
+    // pagination
+        const countTask = await Task.countDocuments(find);
+    
+            let objectPagination = paginationHelper(
+                {
+                    currentPage: 1,
+                    limitItems : 3
+                },
+                req.query,
+                countTask
+            )
+        // end pagination
 
     // sort
     const sort= {};
