@@ -15,6 +15,6 @@ router.post("/create", controller.create);
 
 router.patch("/edit/:id", controller.edit);
 
-// router.delete("/delete/:id",);
+router.delete("/delete/:id", controller.deleted);
 
 export const taskRoutes: Router = router; 
