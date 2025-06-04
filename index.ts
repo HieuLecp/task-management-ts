@@ -1,5 +1,6 @@
 import express, {Express} from "express";
 import dotenv from "dotenv";
+import bodyParser from 'body-parser'
 
 import * as database from "./config/database";
 
@@ -11,6 +12,9 @@ database.connect();
 
 const app: Express = express();
 const port: number | string = process.env.PORT;
+
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 mainV1Routes(app);
 

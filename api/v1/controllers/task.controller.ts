@@ -2,7 +2,9 @@ import {Request, Response} from "express";
 import Task from "../models/tasks.model";
 import paginationHelper from "../../../helpers/pagination";
 import searchHelper from "../../../helpers/search";
+import { stat } from "fs";
 
+// [GET] api/v1/tasks
 export const index= async (req: Request, res: Response) => {
 
     interface Find {
@@ -58,10 +60,11 @@ export const index= async (req: Request, res: Response) => {
     res.json(tasks);
 }
 
+// [GET] api/v1/tasks/:id
 export const detail= async (req: Request, res: Response) => {
     try{
         const id= req.params.id;
-
+        console.log(id);
         const tasks= await Task.findOne({
             _id: id,
             deleted: false
@@ -75,9 +78,8 @@ export const detail= async (req: Request, res: Response) => {
     }
 };
 
-// [PATCH] api/v1/task/change-status/:id
+// [PATCH] api/v1/tasks/change-status/:id
 export const changeStatus= async (req: Request, res: Response) => {
-    
     try{
         const id= req.params.id;
         const status= req.body.status;
