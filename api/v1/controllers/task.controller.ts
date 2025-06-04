@@ -64,7 +64,7 @@ export const index= async (req: Request, res: Response) => {
 export const detail= async (req: Request, res: Response) => {
     try{
         const id= req.params.id;
-        console.log(id);
+        // console.log(id);
         const tasks= await Task.findOne({
             _id: id,
             deleted: false
@@ -81,8 +81,8 @@ export const detail= async (req: Request, res: Response) => {
 // [PATCH] api/v1/tasks/change-status/:id
 export const changeStatus= async (req: Request, res: Response) => {
     try{
-        const id= req.params.id;
-        const status= req.body.status;
+        const id: String = req.params.id;
+        const status: String= req.body.status;
         
         await Task.updateOne({
             _id: id
@@ -94,6 +94,55 @@ export const changeStatus= async (req: Request, res: Response) => {
             code: 200,
             message: "Cập nhập trạng thái thành công!"
         });
+    }catch(error) {
+        res.json({
+            code: 400,
+            message: "Không tồn tại!"
+        });
+    }
+};
+
+// [PATCH] api/v1/tasks/change-multi
+export const changeMulti= async (req: Request, res: Response) => {
+    
+    try{
+       const ids: string[] = req.body.ids;
+       const key: string = req.body.key;
+       const value: string = req.body.value
+
+       switch (key){
+            case "status":
+                await Task.updateMany({
+                    _id: {$in: ids}
+                }, {
+                    status: value
+                })
+                res.json({
+                    code: 200,
+                    message: "Cập nhập thành công!"
+                })
+                break;
+
+            case "delete":
+                await Task.updateMany({
+                    _id: {$in: ids}
+                }, {
+                    deleted: true,
+                    deletedAt: new Date()
+                })
+                res.json({
+                    code: 200,
+                    message: "Xoá thành công!"
+                })
+                break;
+            
+            default:
+                res.json({
+                    code: 400,
+                    message: "Không tồn tại!"
+                });
+       }
+
     }catch(error) {
         res.json({
             code: 400,
