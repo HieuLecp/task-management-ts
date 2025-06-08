@@ -1,6 +1,7 @@
 import { Express } from "express";
 
 import { taskRoutes } from "./task.route";
+import { userRoutes } from "./users.route";
 
 // const authMiddleware= require("../middlewares/auth.middleware");
 
@@ -12,6 +13,11 @@ const mainV1Routes = (app : Express): void => {
     app.use(version + '/tasks', 
         // authMiddleware.requireAuth,
         taskRoutes
+    );
+
+    app.use(version + '/users', 
+        // authMiddleware.requireAuth,
+        userRoutes
     );
 
 }
